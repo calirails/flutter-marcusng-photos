@@ -55,7 +55,10 @@ class _PhotoScreenState extends State<PhotoScreen> {
                                   childAspectRatio: 0.7),
                           itemBuilder: (context, index) {
                             final photo = photos[index];
-                            return PhotoCard(photo: photo);
+                            return PhotoCard(
+                                photo: photo,
+                                photos: photos,
+                                currentIndex: index);
                           },
                           itemCount: photos.length,
                         );
