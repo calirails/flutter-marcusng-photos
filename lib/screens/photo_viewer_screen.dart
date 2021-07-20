@@ -48,17 +48,20 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CachedNetworkImage(
-                  imageUrl: photo.url,
-                  height: 300.0,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorWidget: (context, url, err) => Center(
-                      child: const Icon(
-                    Icons.error,
-                    color: Colors.red,
-                    size: 50.0,
-                  )),
+                Hero(
+                  tag: Key('${index}_${photo.id}'),
+                  child: CachedNetworkImage(
+                    imageUrl: photo.url,
+                    height: 300.0,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorWidget: (context, url, err) => Center(
+                        child: const Icon(
+                      Icons.error,
+                      color: Colors.red,
+                      size: 50.0,
+                    )),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(

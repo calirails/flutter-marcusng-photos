@@ -22,20 +22,23 @@ class PhotoCard extends StatelessWidget {
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => PhotoViewerScreen(
               photos: this.photos, currentIndex: this.currentIndex))),
-      child: new Container(
-        decoration: BoxDecoration(
-          color: Colors.indigo,
-          borderRadius: BorderRadius.circular(1.2),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black26,
-              offset: Offset(0, 2),
-              blurRadius: 4.0,
-            )
-          ],
-          image: DecorationImage(
-            image: CachedNetworkImageProvider(photo.url),
-            fit: BoxFit.cover,
+      child: Hero(
+        tag: Key('${this.currentIndex}_${this.photo.id}'),
+        child: new Container(
+          decoration: BoxDecoration(
+            color: Colors.indigo,
+            borderRadius: BorderRadius.circular(1.2),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black26,
+                offset: Offset(0, 2),
+                blurRadius: 4.0,
+              )
+            ],
+            image: DecorationImage(
+              image: CachedNetworkImageProvider(photo.url),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),
