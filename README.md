@@ -1,5 +1,9 @@
 # MarcusNg Flutter Tutorial: Photos Viewer
 
+This tutorial follows from Marcus Ng's course at: https://marcusng.com/courses/enrolled/1215244
+
+## Tooling wise, install the extensions to make VS Code development an absolute pleasure
+
 References: [https://www.youtube.com/watch?v=tsqTCOnde8A](here)
 
 A new Flutter project.
