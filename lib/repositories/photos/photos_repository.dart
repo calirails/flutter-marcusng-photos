@@ -17,6 +17,8 @@ class PhotosRepository extends BasePhotoRepository {
     _httpClient.close();
   }
 
+  /// NOTE: here 12 is equivalent to value of Number Per Page set on original query
+  /// This value should be configurable and maintained as its own query metadata state
   @override
   Future<List<Photo>> searchPhotos(
       {@required String query, int page = 1, int perPage = 12}) async {

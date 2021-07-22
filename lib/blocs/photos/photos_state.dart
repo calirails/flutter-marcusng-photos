@@ -2,7 +2,14 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:photos_viewer_tutorial/models/models.dart';
 
-enum PhotosStatus { initial, loading, loaded, paginating, error }
+enum PhotosStatus {
+  initial,
+  loading,
+  loaded,
+  paginating,
+  lastPageReached,
+  error
+}
 
 class PhotosState extends Equatable {
   final String query;

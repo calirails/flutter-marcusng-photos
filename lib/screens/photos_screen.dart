@@ -10,6 +10,21 @@ class PhotoScreen extends StatefulWidget {
 
 class _PhotoScreenState extends State<PhotoScreen> {
   // String _query = 'computers'; // now encaspulated inside of (BLOC) PhotosState
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()
+      ..addListener(() {
+        if (_scrollController.offset ==
+                _scrollController.position.maxScrollExtent &&
+            context.read<PhotosBloc>().state.status !=
+                PhotosStatus.paginating) {
+          context.read<PhotosBloc>().add(PaginatePhotos());
+        }
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,29 +72,30 @@ class _PhotoScreenState extends State<PhotoScreen> {
                           }
                         },
                       ),
-                      if (state.status == PhotosStatus.loaded)
-                        Expanded(
-                            child: state.photos.isNotEmpty
-                                ? GridView.builder(
-                                    padding: const EdgeInsets.all(20.0),
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                            mainAxisSpacing: 12,
-                                            crossAxisSpacing: 12,
-                                            crossAxisCount: 2,
-                                            childAspectRatio: 0.7),
-                                    itemBuilder: (context, index) {
-                                      final photo = state.photos[index];
-                                      return PhotoCard(
-                                          photo: photo,
-                                          photos: state.photos,
-                                          currentIndex: index);
-                                    },
-                                    itemCount: state.photos.length,
-                                  )
-                                : Center(
-                                    child: const Text(
-                                        'No results found. Please try other searches.')))
+                      // if (state.status == PhotosStatus.loaded)
+                      Expanded(
+                          child: state.photos.isNotEmpty
+                              ? GridView.builder(
+                                  controller: _scrollController,
+                                  padding: const EdgeInsets.all(20.0),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          mainAxisSpacing: 12,
+                                          crossAxisSpacing: 12,
+                                          crossAxisCount: 2,
+                                          childAspectRatio: 0.7),
+                                  itemBuilder: (context, index) {
+                                    final photo = state.photos[index];
+                                    return PhotoCard(
+                                        photo: photo,
+                                        photos: state.photos,
+                                        currentIndex: index);
+                                  },
+                                  itemCount: state.photos.length,
+                                )
+                              : Center(
+                                  child: const Text(
+                                      'No results found. Please try other searches.')))
                     ],
                   ),
                   if (state.status == PhotosStatus.loading)

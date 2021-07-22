@@ -29,6 +29,10 @@ class PhotosBloc extends Bloc<PhotosEvent, PhotosState> {
         print(event.query);
         yield* _mapSearchPhotosToState(event);
       }
+
+      if (event is PaginatePhotos) {
+        yield* _mapPaginatePhotos(event);
+      }
     } catch (_, stackTrace) {
       developer.log('$_', name: 'PhotosBloc', error: _, stackTrace: stackTrace);
       yield state;
@@ -41,6 +45,37 @@ class PhotosBloc extends Bloc<PhotosEvent, PhotosState> {
     try {
       final photos = await _repository.searchPhotos(query: event.query);
       yield state.copyWith(photos: photos, status: PhotosStatus.loaded);
+    } catch (err) {
+      print(
+          '[[ PhotosBloc::_mapSearchPhotosToState ]] failed with error: $err');
+      yield state.copyWith(
+          failure: Failure(message: 'Search failed. Try again?'),
+          status: PhotosStatus.error);
+    }
+  }
+
+  Stream<PhotosState> _mapPaginatePhotos(PaginatePhotos event) async* {
+    yield state.copyWith(status: PhotosStatus.paginating);
+
+    try {
+      final photos = List<Photo>.from(state.photos);
+
+      List<Photo> nextPhotos = [];
+      // NOTE: here 12 is equivalent to value of Number Per Page set on original query
+      // This value should be configurable and maintained as its own query metadata state
+      const int PHOTOS_PER_PAGE = 12;
+      if (photos.length >= PHOTOS_PER_PAGE) {
+        nextPhotos = await _repository.searchPhotos(
+          query: state.query,
+          page: state.photos.length ~/ PHOTOS_PER_PAGE + 1,
+        );
+      }
+
+      yield state.copyWith(
+          photos: photos..addAll(nextPhotos),
+          status: nextPhotos.isNotEmpty
+              ? PhotosStatus.loaded
+              : PhotosStatus.lastPageReached);
     } catch (err) {
       print(
           '[[ PhotosBloc::_mapSearchPhotosToState ]] failed with error: $err');
