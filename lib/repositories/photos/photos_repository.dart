@@ -1,7 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
-import 'package:photos_viewer_tutorial/models/photo_model.dart';
+import 'package:photos_viewer_tutorial/models/models.dart';
 import 'package:photos_viewer_tutorial/repositories/respositories.dart';
 import 'package:http/http.dart' as http;
 import 'package:photos_viewer_tutorial/.env.dart';
@@ -26,7 +25,7 @@ class PhotosRepository extends BasePhotoRepository {
     final response = await _httpClient.get(Uri.tryParse(url));
 
     if (response.statusCode != 200) {
-      return [];
+      throw Failure(); // return [];
     }
 
     final Map<String, dynamic> data = jsonDecode(response.body);
