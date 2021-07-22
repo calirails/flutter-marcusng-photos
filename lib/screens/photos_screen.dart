@@ -36,7 +36,18 @@ class _PhotoScreenState extends State<PhotoScreen> {
           ),
           body: BlocConsumer<PhotosBloc, PhotosState>(
             listener: (context, state) {
-              if (state.status == PhotosStatus.error) {
+              if (state.status == PhotosStatus.paginating) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.green,
+                    content: const Text('Loading more photos'),
+                    duration: Duration(milliseconds: 200)));
+              } else if (state.status == PhotosStatus.lastPageReached) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.orange,
+                    content: const Text('Reached "The End" of photos'),
+                    duration: Duration(milliseconds: 700)));
+              } else if (state.status == PhotosStatus.error) {
                 showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
